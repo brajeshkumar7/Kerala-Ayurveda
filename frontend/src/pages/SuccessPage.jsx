@@ -13,17 +13,20 @@ export default function SuccessPage() {
     }
   }, [payment, navigate])
 
+  const websiteUrl = `http://${websiteData.domainName}.localhost:5000`
+
   return (
     <div className="success-page">
-      <div className="container">
+      <div className="success-container">
         <div className="success-card">
-          <div className="success-icon">✓</div>
+          <div className="success-icon">🎉</div>
           
-          <h1>Payment Successful!</h1>
+          <h1>Your clinic website is live!</h1>
           
-          <p className="success-message">
-            Congratulations! Your clinic website "<strong>{websiteData.clinicName}</strong>" has been successfully created.
-          </p>
+          <div className="domain-display">
+            <p className="domain-label">Your Website</p>
+            <p className="domain-name">{websiteData.domainName}</p>
+          </div>
 
           <div className="details">
             <div className="detail-item">
@@ -35,35 +38,22 @@ export default function SuccessPage() {
               <span className="value">{websiteData.doctorName}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Domain:</span>
-              <span className="value">{websiteData.domainName}.ayurwebsites.com</span>
+              <span className="label">Payment ID:</span>
+              <span className="value code">{payment.transactionId}</span>
             </div>
-            <div className="detail-item">
-              <span className="label">Transaction ID:</span>
-              <span className="value">{payment.transactionId}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Amount Paid:</span>
-              <span className="value">${payment.amount?.toFixed(2)}</span>
-            </div>
-          </div>
-
-          <div className="next-steps">
-            <h2>What's Next?</h2>
-            <ol>
-              <li>An email confirmation has been sent to your registered email address</li>
-              <li>Your website will be live within the next 24 hours</li>
-              <li>You can start editing your website from your dashboard</li>
-              <li>We'll send you a separate email with your login credentials</li>
-            </ol>
           </div>
 
           <div className="actions">
-            <button className="btn-primary" onClick={() => navigate('/')}>
+            <a 
+              href={websiteUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="btn-visit"
+            >
+              Visit Website
+            </a>
+            <button className="btn-home" onClick={() => navigate('/')}>
               Back to Home
-            </button>
-            <button className="btn-secondary" onClick={() => navigate('/create')}>
-              Create Another Website
             </button>
           </div>
         </div>
