@@ -4,12 +4,19 @@ import { websiteApi } from '../services/api'
 import '../styles/DashboardPage.css'
 
 const CLINIC_BASE_DOMAIN = import.meta.env.VITE_CLINIC_BASE_DOMAIN || 'ayurwebsites.com'
+const ENABLE_CUSTOM_SUBDOMAINS = import.meta.env.VITE_ENABLE_CUSTOM_SUBDOMAINS === 'true'
 
 const getWebsiteUrl = (domainName) => {
   if (!domainName) return '#'
 
+  const appRouteUrl = `${window.location.origin}/clinic?domain=${encodeURIComponent(domainName)}`
+
+  if (!ENABLE_CUSTOM_SUBDOMAINS) {
+    return appRouteUrl
+  }
+
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    return `${window.location.origin}/clinic?domain=${encodeURIComponent(domainName)}`
+    return appRouteUrl
   }
 
   return `https://${domainName}.${CLINIC_BASE_DOMAIN}`
