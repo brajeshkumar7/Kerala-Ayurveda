@@ -2,15 +2,18 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useStore from '../store/useStore'
 import { websiteApi } from '../services/api'
+import RazorpayPayment from '../components/RazorpayPayment'
 import '../styles/CreateWebsitePage.css'
 
 export default function CreateWebsitePage() {
   const navigate = useNavigate()
-  const { websiteData, setWebsiteData, updateWebsiteField, updateContactField, setLoading, setError } = useStore()
+  const { websiteData, setWebsiteData, updateWebsiteField, updateContactField, setLoading, setError, clearError } = useStore()
   const [formData, setFormData] = useState(websiteData)
   const [errors, setErrors] = useState({})
   const [photoPreview, setPhotoPreview] = useState(websiteData.profilePhotoUrl || null)
   const [activeTab, setActiveTab] = useState('doctor')
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [paymentError, setPaymentError] = useState(null)
 
   // Validation rules
   const validateForm = () => {
@@ -149,9 +152,21 @@ export default function CreateWebsitePage() {
       return
     }
 
-    setLoading(true)
+    // Form is valid - show payment modal
+    // We won't call the API yet, we'll wait for payment success
+    setShowPaymentModal(true)
+    clearError()
+  }
+
+  /**
+   * After payment success - Create website on backend
+   */
+  const handlePaymentSuccess = async (paymentDetails) => {
     try {
-      // Prepare form data
+      setLoading(true)
+      setPaymentError(null)
+
+      // Prepare form data with payment info
       const submitData = new FormData()
       submitData.append('doctorName', formData.doctorName)
       submitData.append('clinicName', formData.clinicName)
@@ -168,26 +183,42 @@ export default function CreateWebsitePage() {
       submitData.append('domainName', formData.domainName)
       submitData.append('template', formData.template)
 
+      // Add payment info
+      submitData.append('paymentId', paymentDetails.paymentId)
+      submitData.append('paymentAmount', paymentDetails.amount)
+
       if (formData.profilePhoto) {
         submitData.append('profilePhoto', formData.profilePhoto)
       }
 
-      // Call API
+      // Call API to create website
       const response = await websiteApi.create(submitData)
 
       // Update store with response data
       setWebsiteData({
         ...formData,
-        profilePhotoUrl: response.data.profilePhotoUrl
+        profilePhotoUrl: response.data.profilePhoto,
+        paymentId: paymentDetails.paymentId,
+        transactionId: paymentDetails.paymentId,
+        amount: paymentDetails.amount
       })
 
-      navigate('/payment')
+      // Close payment modal and navigate to success
+      setShowPaymentModal(false)
+      navigate('/success')
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create website. Please try again.')
+      const errorMsg = err.response?.data?.message || 'Failed to create website. Please try again.'
+      setPaymentError(errorMsg)
+      setError(errorMsg)
       console.error('Error creating website:', err)
     } finally {
       setLoading(false)
     }
+  }
+
+  const handlePaymentError = (errorMsg) => {
+    setPaymentError(errorMsg)
+    setError(errorMsg)
   }
 
   return (
@@ -553,6 +584,63 @@ export default function CreateWebsitePage() {
             </div>
           )}
         </form>
+
+        {/* Payment Modal */}
+        {showPaymentModal && (
+          <div className="payment-modal-overlay">
+            <div className="payment-modal">
+              <div className="payment-header">
+                <h2>Complete Your Payment</h2>
+                <button
+                  type="button"
+                  className="close-btn"
+                  onClick={() => setShowPaymentModal(false)}
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="payment-content">
+                <div className="payment-summary">
+                  <h3>Order Summary</h3>
+                  <div className="summary-item">
+                    <span>Clinic: {formData.clinicName}</span>
+                    <span className="font-bold">{formData.clinicName}</span>
+                  </div>
+                  <div className="summary-item">
+                    <span>Domain: {formData.domainName}.ayurwebsites.com</span>
+                  </div>
+                  <div className="summary-item">
+                    <span>Website Plan:</span>
+                    <span className="font-bold">Professional - ₹99.99</span>
+                  </div>
+                  <div className="summary-divider"></div>
+                  <div className="summary-total">
+                    <span>Total Amount:</span>
+                    <span className="amount">₹99.99</span>
+                  </div>
+                </div>
+
+                {paymentError && (
+                  <div className="error-box">
+                    <p>{paymentError}</p>
+                  </div>
+                )}
+
+                <RazorpayPayment
+                  clinicData={formData.contact}
+                  amount={9999} // ₹99.99 in paisa
+                  onPaymentSuccess={handlePaymentSuccess}
+                  onPaymentError={handlePaymentError}
+                />
+
+                <p className="payment-security-note">
+                  🔒 Your payment is secured with Razorpay's encrypted payment gateway
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
