@@ -21,7 +21,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://kerala-ayurveda.vercel.app',
     credentials: true,
 }))
 app.use(express.json())
