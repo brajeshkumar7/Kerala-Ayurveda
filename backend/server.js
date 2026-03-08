@@ -1,6 +1,8 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import { connectDB } from './config/db.js'
 import websiteRoutes from './routes/websites.js'
 import paymentRoutes from './routes/payments.js'
@@ -11,11 +13,15 @@ dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 5000
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Middleware
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 // Connect to MongoDB
 connectDB()
@@ -39,8 +45,8 @@ app.use((req, res) => {
 // Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack)
-  res.status(500).json({ 
-    error: 'Internal server error',
+  res.status(err.status || 500).json({
+    error: err.message || 'Internal server error',
     message: process.env.NODE_ENV === 'development' ? err.message : undefined
   })
 })

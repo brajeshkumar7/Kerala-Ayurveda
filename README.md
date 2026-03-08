@@ -86,50 +86,114 @@ Backend API will run on `http://localhost:5000`
 
 ## API Endpoints
 
-### Websites
-- `GET /api/websites` - Get all websites
-- `GET /api/websites/:id` - Get specific website
-- `POST /api/websites` - Create website
-- `PUT /api/websites/:id` - Update website
-- `DELETE /api/websites/:id` - Delete website
-- `POST /api/websites/:id/publish` - Publish website
+### ✅ Websites (FULLY IMPLEMENTED)
+- `POST /api/websites` - Create website ✅
+- `GET /api/websites` - Get all websites with pagination & filters ✅
+- `GET /api/websites/:id` - Get specific website ✅
+- `GET /api/websites/domain/:domainName` - Get website by domain ✅
+- `PUT /api/websites/:id` - Update website ✅
+- `DELETE /api/websites/:id` - Delete website ✅
+- `POST /api/websites/:id/publish` - Publish website ✅
+- `POST /api/websites/:id/unpublish` - Unpublish website ✅
 
-### Payments
+**Features:**
+- File upload for profile photos
+- Automatic domain generation
+- Duplicate domain detection
+- Pagination support
+- Filter by city, template, status
+- Comprehensive validation and error handling
+
+**See:** [API_DOCUMENTATION.md](backend/API_DOCUMENTATION.md) for detailed endpoints
+
+### Payments (In Progress)
 - `POST /api/payments` - Process payment
 - `GET /api/payments/:id` - Get payment status
 - `POST /api/payments/:id/verify` - Verify payment
 
-### Auth
+### Auth (In Progress)
 - `POST /api/auth/register` - Register user
 - `POST /api/auth/login` - Login user
 - `POST /api/auth/logout` - Logout user
 - `GET /api/auth/profile` - Get user profile
 - `PUT /api/auth/profile` - Update user profile
 
-### Uploads
+### Uploads (In Progress)
 - `POST /api/uploads/image` - Upload image
 - `POST /api/uploads/document` - Upload document
 
 ## Features
 
-- ✅ Complete project structure
-- ✅ Frontend and backend separated
-- ✅ MongoDB integration ready
-- ✅ Payment processing flow
-- ✅ File upload system
+- ✅ Complete project structure (frontend + backend separated)
+- ✅ Professional landing page with 6 features + 3-tier pricing
+- ✅ Multi-tab clinic website creation form with validation
+- ✅ Frontend-backend integration with Axios + FormData
+- ✅ MongoDB integration with DoctorSite schema
+- ✅ **Complete Website API** (8 endpoints fully implemented)
+  - ✅ File upload handling (profile photos)
+  - ✅ Unique domain checking
+  - ✅ Pagination and filtering
+  - ✅ Publish/unpublish functionality
+  - ✅ Comprehensive validation and error handling
 - ✅ State management with Zustand
 - ✅ RESTful API structure
 - ✅ Environment configuration
+- ✅ Comprehensive API documentation (3 docs)
+- ✅ Automated test suite
+- ⏳ Payment processing gateway (routes/controllers stubbed)
+- ⏳ User authentication (JWT framework ready)
+- ⏳ Email service (SMTP configuration needed)
 
 ## Next Steps
 
-1. **Connect MongoDB** - Update `.env` with your MongoDB connection string
-2. **Implement Controllers** - Complete the controller functions with business logic
-3. **Add Authentication** - Implement JWT-based authentication
-4. **Setup Payment Gateway** - Integrate Stripe or PayPal
-5. **Email Service** - Configure SMTP for sending emails
-6. **Testing** - Add unit and integration tests
-7. **Deployment** - Deploy to production servers
+### Immediate (Testing)
+1. **Setup MongoDB** 
+   - Local: Start MongoDB with `mongod`
+   - Cloud: Use MongoDB Atlas connection string
+
+2. **Install Dependencies**
+   ```bash
+   cd backend && npm install
+   cd ../frontend && npm install
+   ```
+
+3. **Test the API**
+   ```bash
+   cd backend
+   npm run dev        # Terminal 1
+   node test-api.js   # Terminal 2
+   ```
+
+4. **Frontend Integration Testing**
+   ```bash
+   cd frontend
+   npm run dev
+   # Test form submission and file upload
+   ```
+
+### High Priority
+1. **Complete Payment Integration**
+   - Implement Stripe API integration
+   - Complete `paymentController.js` functions
+   - Add payment endpoints
+
+2. **User Authentication**
+   - Complete `authController.js` (register, login, getProfile)
+   - Implement JWT middleware
+   - Protect website endpoints with auth
+
+3. **Email Service**
+   - Configure SMTP settings
+   - Implement welcome emails
+   - Send order confirmations
+
+### Documentation
+- ✅ API_DOCUMENTATION.md - Complete API reference
+- ✅ BACKEND_SETUP.md - Setup and deployment guide
+- ✅ API_QUICK_REFERENCE.md - Developer quick reference
+- ✅ IMPLEMENTATION_SUMMARY.md - What's implemented
+
+See `backend/` directory for these files.
 
 ## Environment Variables
 

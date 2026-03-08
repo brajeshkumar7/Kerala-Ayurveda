@@ -1,37 +1,67 @@
 import express from 'express'
-import { validateRequest } from '../middlewares/validation.js'
+import multer from 'multer'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import {
+  createWebsite,
+  getWebsites,
+  getWebsite,
+  getWebsiteByDomain,
+  updateWebsite,
+  deleteWebsite,
+  publishWebsite,
+  unpublishWebsite
+} from '../controllers/websiteController.js'
 
 const router = express.Router()
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-// TODO: Implement website controllers
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, '../uploads'))
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, 'profile-' + uniqueSuffix + path.extname(file.originalname))
+  }
+})
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  fileFilter: (req, file, cb) => {
+    const allowedMimes = ['image/jpeg', 'image/png', 'image/webp']
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true)
+    } else {
+      cb(new Error('Invalid file type. Only JPEG, PNG, and WebP images are allowed.'))
+    }
+  }
+})
+
+// POST create website with file upload
+router.post('/', upload.single('profilePhoto'), createWebsite)
+
 // GET all websites
-router.get('/', (req, res) => {
-  res.json({ message: 'Get all websites' })
-})
+router.get('/', getWebsites)
 
-// GET single website
-router.get('/:id', (req, res) => {
-  res.json({ message: 'Get website by ID', id: req.params.id })
-})
+// GET website by domain
+router.get('/domain/:domainName', getWebsiteByDomain)
 
-// POST create website
-router.post('/', (req, res) => {
-  res.json({ message: 'Create website', data: req.body })
-})
+// GET single website by ID
+router.get('/:id', getWebsite)
 
 // PUT update website
-router.put('/:id', (req, res) => {
-  res.json({ message: 'Update website', id: req.params.id, data: req.body })
-})
+router.put('/:id', upload.single('profilePhoto'), updateWebsite)
 
 // DELETE website
-router.delete('/:id', (req, res) => {
-  res.json({ message: 'Delete website', id: req.params.id })
-})
+router.delete('/:id', deleteWebsite)
 
 // POST publish website
-router.post('/:id/publish', (req, res) => {
-  res.json({ message: 'Publish website', id: req.params.id })
-})
+router.post('/:id/publish', publishWebsite)
+
+// POST unpublish website
+router.post('/:id/unpublish', unpublishWebsite)
 
 export default router
