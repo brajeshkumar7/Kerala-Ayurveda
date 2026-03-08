@@ -212,7 +212,7 @@ STRIPE_PUBLISHABLE_KEY=your_publishable_key
 ```
 REACT_APP_API_URL=http://localhost:5000/api
 ```
-
+ 
 ## Architecture
 
 ### Frontend Architecture
