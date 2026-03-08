@@ -4,18 +4,11 @@
   "description": "A complete full-stack SaaS platform for creating Ayurvedic business websites. Built with React + Vite frontend and Node.js + Express backend with MongoDB.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/brajeshkumar7/Kerala-Ayurveda.git"
+     "build": "npm install --prefix backend",
+     "start": "npm run start --prefix backend"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/brajeshkumar7/Kerala-Ayurveda/issues"
-  },
-  "homepage": "https://github.com/brajeshkumar7/Kerala-Ayurveda#readme"
+  "type": "commonjs"
 }
