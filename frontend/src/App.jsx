@@ -5,6 +5,7 @@ import CreateWebsitePage from './pages/CreateWebsitePage'
 import PaymentPage from './pages/PaymentPage'
 import SuccessPage from './pages/SuccessPage'
 import DashboardPage from './pages/DashboardPage'
+import ClinicWebsitePage from './pages/ClinicWebsitePage'
 import './App.css'
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/success" element={<SuccessPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/clinic" element={<ClinicWebsitePage />} />
       </Routes>
     </Router>
   )

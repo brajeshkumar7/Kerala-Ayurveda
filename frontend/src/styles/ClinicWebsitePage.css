@@ -1,0 +1,380 @@
+.clinic-website {
+  min-height: 100vh;
+  background: #f5f3f0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* Header */
+.clinic-header {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 30px 20px;
+  border-bottom: 4px solid #8B4513;
+}
+
+.clinic-header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.clinic-header-content h1 {
+  color: #8B4513;
+  font-size: 32px;
+  margin: 0 0 5px 0;
+  font-weight: 700;
+}
+
+.clinic-tagline {
+  color: #999;
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Hero Section */
+.clinic-hero {
+  background: white;
+  padding: 60px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.hero-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.doctor-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.doctor-photo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.doctor-photo {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+}
+
+.doctor-info h2 {
+  color: #8B4513;
+  font-size: 28px;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+}
+
+.qualification {
+  color: #666;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 5px 0;
+}
+
+.experience {
+  color: #999;
+  font-size: 14px;
+  margin: 0 0 25px 0;
+}
+
+.bio {
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.bio h3 {
+  color: #8B4513;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
+.bio p {
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Services Section */
+.clinic-services {
+  padding: 60px 20px;
+  background: #f5f3f0;
+}
+
+.clinic-services .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.clinic-services h2 {
+  color: #8B4513;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 30px 0;
+}
+
+.services-list {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.services-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.services-list li {
+  color: #666;
+  font-size: 16px;
+  padding: 15px;
+  background: #f9f7f5;
+  border-radius: 10px;
+  border-left: 4px solid #8B4513;
+}
+
+.services-list p {
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Contact Section */
+.clinic-contact {
+  padding: 60px 20px;
+  background: white;
+}
+
+.clinic-contact .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.clinic-contact h2 {
+  color: #8B4513;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 40px 0;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.contact-item {
+  background: #f5f3f0;
+  padding: 25px;
+  border-radius: 15px;
+  border-top: 4px solid #8B4513;
+}
+
+.contact-item h3 {
+  color: #8B4513;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 15px 0;
+}
+
+.contact-link {
+  color: #8B4513;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.contact-link:hover {
+  text-decoration: underline;
+}
+
+.address-text {
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Map Section */
+.clinic-map {
+  padding: 60px 20px;
+  background: #f5f3f0;
+}
+
+.clinic-map .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.clinic-map h2 {
+  color: #8B4513;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 30px 0;
+}
+
+.map-link {
+  display: inline-block;
+  background: #8B4513;
+  color: white;
+  padding: 15px 40px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(139, 69, 19, 0.2);
+}
+
+.map-link:hover {
+  background: #6d3410;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 69, 19, 0.3);
+}
+
+/* Footer */
+.clinic-footer {
+  background: #333;
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.clinic-footer .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.clinic-footer p {
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.clinic-footer strong {
+  color: #8B4513;
+}
+
+/* Loading State */
+.clinic-website-loading {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f5f3f0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e0e0e0;
+  border-top: 4px solid #8B4513;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.clinic-website-loading p {
+  color: #666;
+  font-size: 16px;
+}
+
+/* Error State */
+.clinic-website-error {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f5f3f0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  padding: 20px;
+  text-align: center;
+}
+
+.clinic-website-error h2 {
+  color: #D32F2F;
+  font-size: 24px;
+  margin: 0 0 15px 0;
+}
+
+.clinic-website-error p {
+  color: #666;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .clinic-header-content h1 {
+    font-size: 24px;
+  }
+
+  .doctor-section {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .doctor-photo {
+    max-width: 100%;
+  }
+
+  .doctor-info h2 {
+    font-size: 22px;
+  }
+
+  .clinic-services h2,
+  .clinic-contact h2,
+  .clinic-map h2 {
+    font-size: 22px;
+  }
+
+  .services-list ul {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .clinic-hero {
+    padding: 40px 20px;
+  }
+
+  .clinic-services,
+  .clinic-contact,
+  .clinic-map {
+    padding: 40px 20px;
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}

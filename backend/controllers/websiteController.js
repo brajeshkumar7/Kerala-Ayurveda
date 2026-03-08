@@ -56,7 +56,9 @@ export const createWebsite = async (req, res) => {
       bio: bio || '',
       domainName: domainName.toLowerCase(),
       template,
-      profilePhoto: req.file ? `/uploads/${req.file.filename}` : null
+      profilePhoto: req.file ? `/uploads/${req.file.filename}` : null,
+      isPublished: true, // Auto-publish when created
+      status: 'published'
     })
 
     // Save to database

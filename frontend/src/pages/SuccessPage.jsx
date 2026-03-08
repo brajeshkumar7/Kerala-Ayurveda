@@ -9,7 +9,7 @@ export default function SuccessPage() {
 
   useEffect(() => {
     if (!payment.transactionId) {
-      navigate('/create')
+      navigate('/landing')
     }
   }, [payment, navigate])
 
@@ -19,7 +19,7 @@ export default function SuccessPage() {
     <div className="success-page">
       <div className="success-container">
         <div className="success-card">
-          <div className="success-icon">🎉</div>
+          <div className="success-icon">Success</div>
           
           <h1>Your clinic website is live!</h1>
           

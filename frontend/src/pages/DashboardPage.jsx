@@ -44,7 +44,7 @@ export default function DashboardPage() {
   const handlePublish = async (id) => {
     try {
       await websiteApi.publish(id)
-      setWebsites(websites.map(w => 
+      setWebsites(websites.map(w =>
         w._id === id ? { ...w, isPublished: true } : w
       ))
       alert('Website published successfully')
@@ -67,7 +67,7 @@ export default function DashboardPage() {
     <div className="dashboard-page">
       <div className="dashboard-header">
         <div className="header-content">
-          <h1>🏥 Website Dashboard</h1>
+          <h1>Website Dashboard</h1>
           <p>Manage all your clinic websites</p>
         </div>
         <button className="btn-create-new" onClick={() => navigate('/create')}>
@@ -132,20 +132,20 @@ export default function DashboardPage() {
 
                 <div className="website-status">
                   {website.isPublished ? (
-                    <span className="status published">✓ Published</span>
+                    <span className="status published">Published</span>
                   ) : (
-                    <span className="status draft">⊙ Draft</span>
+                    <span className="status draft">Draft</span>
                   )}
                 </div>
 
                 <div className="website-actions">
                   <a
-                    href={`http://${website.domainName}.localhost:5000`}
+                    href={`${window.location.origin}/clinic?domain=${encodeURIComponent(website.domainName)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-visit"
                   >
-                    👁 Visit Website
+                    Visit Website
                   </a>
 
                   {!website.isPublished && (
@@ -153,7 +153,7 @@ export default function DashboardPage() {
                       className="btn-publish"
                       onClick={() => handlePublish(website._id)}
                     >
-                      📤 Publish
+                      Publish
                     </button>
                   )}
 
@@ -161,7 +161,7 @@ export default function DashboardPage() {
                     className="btn-delete"
                     onClick={() => handleDelete(website._id)}
                   >
-                    🗑 Delete
+                    Delete
                   </button>
                 </div>
               </div>
@@ -172,7 +172,7 @@ export default function DashboardPage() {
 
       <div className="dashboard-footer">
         <button className="btn-back" onClick={() => navigate('/')}>
-          ← Back to Home
+          Back to Home
         </button>
       </div>
     </div>

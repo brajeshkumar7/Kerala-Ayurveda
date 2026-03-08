@@ -1,67 +1,49 @@
 import express from 'express'
-import { domainResolver } from '../middlewares/domainResolver.js'
 
 const router = express.Router()
 
 /**
  * Dynamic Clinic Website Routes
- * 
- * These routes work with the domainResolver middleware to serve
- * clinic websites based on the request hostname/domain
- * 
- * Usage:
- * - Apply domainResolver middleware to these routes
- * - Clinic data will be available in req.siteData
+ *
+ * These routes depend on req.siteData from domainResolver middleware
+ * registered in server.js.
  */
 
-// Apply domain resolver middleware to all routes in this router
-router.use(domainResolver)
-
 /**
- * GET / - Render clinic website or landing page
- * 
- * If req.siteData exists (clinic domain):
- * - Returns clinic data formatted for ClinicTemplate component
- * - Displays: clinicName, doctorName, qualification, experience, 
- *            services, bio, phone, whatsapp, address, googleMapsLink
- * 
- * If no site data (main domain):
- * - Returns landing page flag
- * - Frontend renders LandingPage component
+ * GET /
+ *
+ * If a clinic domain is resolved, redirect browser to frontend clinic page.
+ * If request prefers JSON, return clinic payload directly.
  */
 router.get('/', (req, res) => {
   if (req.siteData) {
-    // ✅ Clinic domain detected - render clinic website
+    const wantsHtml = req.accepts('html') && !req.path.startsWith('/api')
+
+    if (wantsHtml) {
+      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173'
+      const clinicUrl = `${frontendUrl}/clinic?domain=${encodeURIComponent(req.siteData.domainName)}`
+      return res.redirect(clinicUrl)
+    }
+
     return res.json({
       success: true,
       isClinicSite: true,
       message: `Welcome to ${req.siteData.clinicName}`,
       data: {
-        // Clinic Information
         clinicName: req.siteData.clinicName,
         clinicDescription: req.siteData.clinicDescription || '',
-        
-        // Doctor Information
         doctorName: req.siteData.doctorName,
         qualification: req.siteData.doctorQualification,
         experience: req.siteData.doctorExperience,
         bio: req.siteData.bio,
         doctorPhoto: req.siteData.profilePhoto,
-        
-        // Services
         services: req.siteData.services,
-        
-        // Contact Information
         phone: req.siteData.phone,
         whatsapp: req.siteData.whatsapp,
         email: req.siteData.email,
-        
-        // Address & Location
         address: req.siteData.address,
         city: req.siteData.city,
         googleMapsLink: req.siteData.googleMapsLink,
-        
-        // Metadata
         template: req.siteData.template,
         isPublished: req.siteData.isPublished,
         domainName: req.siteData.domainName,
@@ -70,7 +52,6 @@ router.get('/', (req, res) => {
     })
   }
 
-  // ❌ No clinic data - return landing page flag
   return res.json({
     success: true,
     isClinicSite: false,
@@ -81,9 +62,9 @@ router.get('/', (req, res) => {
 })
 
 /**
- * GET /api/site-data - Get clinic data for dynamic rendering
- * 
- * Used by frontend to fetch clinic data and render the website
+ * GET /api/site-data
+ *
+ * Returns resolved clinic data for current domain.
  */
 router.get('/api/site-data', (req, res) => {
   if (req.siteData) {
@@ -99,15 +80,9 @@ router.get('/api/site-data', (req, res) => {
   })
 })
 
-/**
- * GET /contact - Get current site contact information
- */
 router.get('/contact', (req, res) => {
   if (!req.siteData) {
-    return res.status(404).json({
-      success: false,
-      message: 'Website not found'
-    })
+    return res.status(404).json({ success: false, message: 'Website not found' })
   }
 
   return res.json({
@@ -123,15 +98,9 @@ router.get('/contact', (req, res) => {
   })
 })
 
-/**
- * GET /services - List all services for current clinic
- */
 router.get('/services', (req, res) => {
   if (!req.siteData) {
-    return res.status(404).json({
-      success: false,
-      message: 'Website not found'
-    })
+    return res.status(404).json({ success: false, message: 'Website not found' })
   }
 
   return res.json({
@@ -143,15 +112,9 @@ router.get('/services', (req, res) => {
   })
 })
 
-/**
- * GET /about - Get doctor information
- */
 router.get('/about', (req, res) => {
   if (!req.siteData) {
-    return res.status(404).json({
-      success: false,
-      message: 'Website not found'
-    })
+    return res.status(404).json({ success: false, message: 'Website not found' })
   }
 
   return res.json({
@@ -166,15 +129,9 @@ router.get('/about', (req, res) => {
   })
 })
 
-/**
- * POST /contact-form - Submit contact form for clinic
- */
 router.post('/contact-form', (req, res) => {
   if (!req.siteData) {
-    return res.status(404).json({
-      success: false,
-      message: 'Website not found'
-    })
+    return res.status(404).json({ success: false, message: 'Website not found' })
   }
 
   const { name, email, message } = req.body
@@ -186,9 +143,6 @@ router.post('/contact-form', (req, res) => {
     })
   }
 
-  // TODO: Save contact form submission to database
-  // TODO: Send email notification to clinic
-  
   return res.json({
     success: true,
     message: 'Thank you for your message. We will contact you soon.',
@@ -197,35 +151,11 @@ router.post('/contact-form', (req, res) => {
   })
 })
 
-/**
- * Catch-all for undefined routes
- * 
- * If clinic domain: return home page data
- * If main domain: return landing page flag
- */
 router.get('*', (req, res) => {
   if (req.siteData) {
-    // Clinic domain - return clinic homepage data
-    return res.json({
-      success: true,
-      isClinicSite: true,
-      data: {
-        clinicName: req.siteData.clinicName,
-        doctorName: req.siteData.doctorName,
-        qualification: req.siteData.doctorQualification,
-        experience: req.siteData.doctorExperience,
-        bio: req.siteData.bio,
-        doctorPhoto: req.siteData.profilePhoto,
-        services: req.siteData.services,
-        phone: req.siteData.phone,
-        whatsapp: req.siteData.whatsapp,
-        address: req.siteData.address,
-        googleMapsLink: req.siteData.googleMapsLink
-      }
-    })
+    return res.redirect(`/?from=${encodeURIComponent(req.originalUrl)}`)
   }
 
-  // Main domain - return landing page
   return res.json({
     success: true,
     isClinicSite: false,
