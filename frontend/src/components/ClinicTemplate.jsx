@@ -17,6 +17,16 @@ const ClinicTemplate = ({ clinic = {} }) => {
     clinicDescription = ''
   } = clinic
 
+  // Get image URL with proper backend base URL
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null
+    if (imagePath.startsWith('http')) return imagePath
+    // Remove leading slash from path if present
+    const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`
+    const backendUrl = import.meta.env.MODE === "development" ? "http://localhost:5000" : window.location.origin
+    return `${backendUrl}${cleanPath}`
+  }
+
   // Format arrays if they come as strings
   const serviceList = Array.isArray(services) 
     ? services 
@@ -64,9 +74,13 @@ const ClinicTemplate = ({ clinic = {} }) => {
             {doctorPhoto && (
               <div className="doctor-photo-container">
                 <img 
-                  src={doctorPhoto} 
+                  src={getImageUrl(doctorPhoto)} 
                   alt={doctorName}
                   className="doctor-photo"
+                  onError={(e) => {
+                    console.error('Image failed to load. Tried URL:', getImageUrl(doctorPhoto))
+                    e.target.style.display = 'none'
+                  }}
                 />
               </div>
             )}
