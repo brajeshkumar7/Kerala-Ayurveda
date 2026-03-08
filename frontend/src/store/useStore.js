@@ -7,21 +7,48 @@ const useStore = create((set) => ({
   
   // Website data state
   websiteData: {
-    name: '',
-    description: '',
-    template: '',
-    services: [],
+    // Basic Info
+    domainName: '',
+    template: 'classic',
+    
+    // Doctor Information
+    doctorName: '',
+    doctorQualification: '',
+    doctorExperience: '',
+    
+    // Clinic Information
+    clinicName: '',
+    clinicDescription: '',
+    address: '',
+    city: '',
+    googleMapsLink: '',
+    services: '',
+    
+    // Doctor Bio
+    bio: '',
+    
+    // Contact
     contact: {
       email: '',
       phone: '',
-      address: ''
-    }
+      whatsapp: ''
+    },
+    
+    // Profile Photo
+    profilePhoto: null,
+    profilePhotoUrl: ''
   },
   setWebsiteData: (data) => set((state) => ({
     websiteData: { ...state.websiteData, ...data }
   })),
   updateWebsiteField: (field, value) => set((state) => ({
     websiteData: { ...state.websiteData, [field]: value }
+  })),
+  updateContactField: (field, value) => set((state) => ({
+    websiteData: {
+      ...state.websiteData,
+      contact: { ...state.websiteData.contact, [field]: value }
+    }
   })),
   
   // Payment state
@@ -45,15 +72,25 @@ const useStore = create((set) => ({
   reset: () => set({
     user: null,
     websiteData: {
-      name: '',
-      description: '',
-      template: '',
-      services: [],
+      domainName: '',
+      template: 'classic',
+      doctorName: '',
+      doctorQualification: '',
+      doctorExperience: '',
+      clinicName: '',
+      clinicDescription: '',
+      address: '',
+      city: '',
+      googleMapsLink: '',
+      services: '',
+      bio: '',
       contact: {
         email: '',
         phone: '',
-        address: ''
-      }
+        whatsapp: ''
+      },
+      profilePhoto: null,
+      profilePhotoUrl: ''
     },
     payment: {
       amount: 0,

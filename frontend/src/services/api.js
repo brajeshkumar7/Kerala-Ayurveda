@@ -37,7 +37,17 @@ api.interceptors.response.use(
 
 // Website API endpoints
 export const websiteApi = {
-  create: (data) => api.post('/websites', data),
+  create: (data) => {
+    // Handle FormData for file uploads
+    if (data instanceof FormData) {
+      return api.post('/websites', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+    }
+    return api.post('/websites', data)
+  },
   getAll: () => api.get('/websites'),
   getById: (id) => api.get(`/websites/${id}`),
   update: (id, data) => api.put(`/websites/${id}`, data),

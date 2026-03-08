@@ -22,10 +22,22 @@ export default function SuccessPage() {
           <h1>Payment Successful!</h1>
           
           <p className="success-message">
-            Congratulations! Your website "<strong>{websiteData.name}</strong>" has been successfully created.
+            Congratulations! Your clinic website "<strong>{websiteData.clinicName}</strong>" has been successfully created.
           </p>
 
           <div className="details">
+            <div className="detail-item">
+              <span className="label">Clinic Name:</span>
+              <span className="value">{websiteData.clinicName}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Doctor:</span>
+              <span className="value">{websiteData.doctorName}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Domain:</span>
+              <span className="value">{websiteData.domainName}.ayurwebsites.com</span>
+            </div>
             <div className="detail-item">
               <span className="label">Transaction ID:</span>
               <span className="value">{payment.transactionId}</span>
@@ -33,10 +45,6 @@ export default function SuccessPage() {
             <div className="detail-item">
               <span className="label">Amount Paid:</span>
               <span className="value">${payment.amount?.toFixed(2)}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Website Template:</span>
-              <span className="value">{websiteData.template}</span>
             </div>
           </div>
 

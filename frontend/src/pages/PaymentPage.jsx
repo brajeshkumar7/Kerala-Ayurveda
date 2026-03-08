@@ -63,7 +63,9 @@ export default function PaymentPage() {
         
         <div className="payment-summary">
           <h2>Order Summary</h2>
-          <p><strong>Website Name:</strong> {websiteData.name}</p>
+          <p><strong>Clinic Name:</strong> {websiteData.clinicName || 'Your Clinic'}</p>
+          <p><strong>Doctor:</strong> {websiteData.doctorName}</p>
+          <p><strong>Location:</strong> {websiteData.city}</p>
           <p><strong>Template:</strong> {websiteData.template}</p>
           <p className="amount"><strong>Total Amount:</strong> ${amount.toFixed(2)}</p>
         </div>
