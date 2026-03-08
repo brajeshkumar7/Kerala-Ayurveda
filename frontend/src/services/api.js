@@ -1,6 +1,13 @@
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.mode === "development" ? "http://localhost:5000/api" : "/api"
+// API base URL derived from environment variable or defaults
+// VITE_API_URL should point to backend host (without trailing slash)
+// Example: "https://api.example.com" or "http://localhost:5000" during development
+const API_BASE_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
+  : import.meta.env.MODE === "development"
+    ? "http://localhost:5000/api"
+    : "/api"
 
 const api = axios.create({
   baseURL: API_BASE_URL,

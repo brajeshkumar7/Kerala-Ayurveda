@@ -20,7 +20,12 @@ const RazorpayPayment = ({
 }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const API_BASE = import.meta.mode === "development" ? "http://localhost:5000/api" : "/api"
+  // reuse environment-based base url logic
+  const API_BASE = import.meta.env.VITE_API_URL
+    ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
+    : import.meta.env.MODE === "development"
+      ? "http://localhost:5000/api"
+      : "/api"
 
   /**
    * Step 1: Create Razorpay Order

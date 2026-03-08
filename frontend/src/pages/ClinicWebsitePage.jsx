@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import '../styles/ClinicWebsitePage.css'
 
-const API_BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:5000/api" : "/api"
+// derive API base with environment variable
+const API_BASE_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
+  : import.meta.env.MODE === "development"
+    ? "http://localhost:5000/api"
+    : "/api"
 const BACKEND_BASE_URL = API_BASE_URL.replace('/api', '')
 
 const normalizeClinicData = (data) => ({
