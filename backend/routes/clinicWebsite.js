@@ -18,25 +18,64 @@ const router = express.Router()
 router.use(domainResolver)
 
 /**
- * GET / - Render clinic website homepage
+ * GET / - Render clinic website or landing page
  * 
- * Returns clinic data as JSON (for frontend to render)
- * In production, this would render HTML directly or return data for frontend rendering
+ * If req.siteData exists (clinic domain):
+ * - Returns clinic data formatted for ClinicTemplate component
+ * - Displays: clinicName, doctorName, qualification, experience, 
+ *            services, bio, phone, whatsapp, address, googleMapsLink
+ * 
+ * If no site data (main domain):
+ * - Returns landing page flag
+ * - Frontend renders LandingPage component
  */
 router.get('/', (req, res) => {
   if (req.siteData) {
-    // Clinic website found
+    // ✅ Clinic domain detected - render clinic website
     return res.json({
       success: true,
-      message: 'Clinic website found',
-      data: req.siteData
+      isClinicSite: true,
+      message: `Welcome to ${req.siteData.clinicName}`,
+      data: {
+        // Clinic Information
+        clinicName: req.siteData.clinicName,
+        clinicDescription: req.siteData.clinicDescription || '',
+        
+        // Doctor Information
+        doctorName: req.siteData.doctorName,
+        qualification: req.siteData.doctorQualification,
+        experience: req.siteData.doctorExperience,
+        bio: req.siteData.bio,
+        doctorPhoto: req.siteData.profilePhoto,
+        
+        // Services
+        services: req.siteData.services,
+        
+        // Contact Information
+        phone: req.siteData.phone,
+        whatsapp: req.siteData.whatsapp,
+        email: req.siteData.email,
+        
+        // Address & Location
+        address: req.siteData.address,
+        city: req.siteData.city,
+        googleMapsLink: req.siteData.googleMapsLink,
+        
+        // Metadata
+        template: req.siteData.template,
+        isPublished: req.siteData.isPublished,
+        domainName: req.siteData.domainName,
+        fullDomain: req.siteData.fullDomain
+      }
     })
   }
 
-  // No clinic found for this domain
-  return res.status(404).json({
-    success: false,
-    message: 'Website not found for this domain',
+  // ❌ No clinic data - return landing page flag
+  return res.json({
+    success: true,
+    isClinicSite: false,
+    isLandingPage: true,
+    message: 'Welcome to AyurWebsites',
     domain: req.hostname
   })
 })
@@ -159,20 +198,39 @@ router.post('/contact-form', (req, res) => {
 })
 
 /**
- * Catch-all for undefined routes on clinic domain
+ * Catch-all for undefined routes
+ * 
+ * If clinic domain: return home page data
+ * If main domain: return landing page flag
  */
 router.get('*', (req, res) => {
   if (req.siteData) {
-    // Return home page data for any unmatched route on clinic domain
+    // Clinic domain - return clinic homepage data
     return res.json({
       success: true,
-      data: req.siteData
+      isClinicSite: true,
+      data: {
+        clinicName: req.siteData.clinicName,
+        doctorName: req.siteData.doctorName,
+        qualification: req.siteData.doctorQualification,
+        experience: req.siteData.doctorExperience,
+        bio: req.siteData.bio,
+        doctorPhoto: req.siteData.profilePhoto,
+        services: req.siteData.services,
+        phone: req.siteData.phone,
+        whatsapp: req.siteData.whatsapp,
+        address: req.siteData.address,
+        googleMapsLink: req.siteData.googleMapsLink
+      }
     })
   }
 
-  return res.status(404).json({
-    success: false,
-    message: 'Website not found for this domain'
+  // Main domain - return landing page
+  return res.json({
+    success: true,
+    isClinicSite: false,
+    isLandingPage: true,
+    message: 'AyurWebsites - Create Your Clinic Website'
   })
 })
 
