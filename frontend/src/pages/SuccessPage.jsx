@@ -13,7 +13,7 @@ export default function SuccessPage() {
     }
   }, [payment, navigate])
 
-  const websiteUrl = `http://${websiteData.domainName}.localhost:5000`
+  const websiteUrl = `http://${websiteData.domainName}.kerala-ayurveda.onrender.com`
 
   return (
     <div className="success-page">
