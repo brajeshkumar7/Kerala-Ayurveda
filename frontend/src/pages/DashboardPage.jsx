@@ -3,6 +3,18 @@ import { useNavigate } from 'react-router-dom'
 import { websiteApi } from '../services/api'
 import '../styles/DashboardPage.css'
 
+const CLINIC_BASE_DOMAIN = import.meta.env.VITE_CLINIC_BASE_DOMAIN || 'ayurwebsites.com'
+
+const getWebsiteUrl = (domainName) => {
+  if (!domainName) return '#'
+
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return `${window.location.origin}/clinic?domain=${encodeURIComponent(domainName)}`
+  }
+
+  return `https://${domainName}.${CLINIC_BASE_DOMAIN}`
+}
+
 export default function DashboardPage() {
   const [websites, setWebsites] = useState([])
   const [loading, setLoading] = useState(true)
@@ -140,7 +152,7 @@ export default function DashboardPage() {
 
                 <div className="website-actions">
                   <a
-                    href={`${window.location.origin}/clinic?domain=${encodeURIComponent(website.domainName)}`}
+                    href={getWebsiteUrl(website.domainName)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-visit"

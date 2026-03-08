@@ -3,6 +3,18 @@ import { useNavigate } from 'react-router-dom'
 import useStore from '../store/useStore'
 import '../styles/SuccessPage.css'
 
+const CLINIC_BASE_DOMAIN = import.meta.env.VITE_CLINIC_BASE_DOMAIN || 'ayurwebsites.com'
+
+const getWebsiteUrl = (domainName) => {
+  if (!domainName) return '#'
+
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return `${window.location.origin}/clinic?domain=${encodeURIComponent(domainName)}`
+  }
+
+  return `https://${domainName}.${CLINIC_BASE_DOMAIN}`
+}
+
 export default function SuccessPage() {
   const navigate = useNavigate()
   const { payment, websiteData } = useStore()
@@ -13,19 +25,19 @@ export default function SuccessPage() {
     }
   }, [payment, navigate])
 
-  const websiteUrl = `http://${websiteData.domainName}.kerala-ayurveda.onrender.com`
+  const websiteUrl = getWebsiteUrl(websiteData.domainName)
 
   return (
     <div className="success-page">
       <div className="success-container">
         <div className="success-card">
           <div className="success-icon">Success</div>
-          
+
           <h1>Your clinic website is live!</h1>
-          
+
           <div className="domain-display">
             <p className="domain-label">Your Website</p>
-            <p className="domain-name">{websiteData.domainName}</p>
+            <p className="domain-name">{websiteData.domainName}.{CLINIC_BASE_DOMAIN}</p>
           </div>
 
           <div className="details">
@@ -44,9 +56,9 @@ export default function SuccessPage() {
           </div>
 
           <div className="actions">
-            <a 
-              href={websiteUrl} 
-              target="_blank" 
+            <a
+              href={websiteUrl}
+              target="_blank"
               rel="noopener noreferrer"
               className="btn-visit"
             >
