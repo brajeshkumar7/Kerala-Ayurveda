@@ -149,6 +149,18 @@
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
 }
 
+.btn-dashboard {
+  background: #ffc107;
+  color: #333;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+.btn-dashboard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.5);
+  background: #ffb300;
+}
+
 .btn-home {
   background-color: #f0f0f0;
   color: #333;

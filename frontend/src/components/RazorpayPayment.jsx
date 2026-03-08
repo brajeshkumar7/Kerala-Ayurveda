@@ -20,6 +20,7 @@ const RazorpayPayment = ({
 }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
   /**
    * Step 1: Create Razorpay Order
@@ -29,7 +30,7 @@ const RazorpayPayment = ({
       setLoading(true)
       setError(null)
 
-      const response = await fetch('/api/payment/create-order', {
+      const response = await fetch(`${API_BASE}/payment/create-order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -111,7 +112,7 @@ const RazorpayPayment = ({
     try {
       setLoading(true)
 
-      const verifyResponse = await fetch('/api/payment/verify', {
+      const verifyResponse = await fetch(`${API_BASE}/payment/verify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

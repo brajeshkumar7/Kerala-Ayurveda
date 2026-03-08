@@ -52,6 +52,9 @@ export default function SuccessPage() {
             >
               Visit Website
             </a>
+            <button className="btn-dashboard" onClick={() => navigate('/dashboard')}>
+              View Dashboard
+            </button>
             <button className="btn-home" onClick={() => navigate('/')}>
               Back to Home
             </button>

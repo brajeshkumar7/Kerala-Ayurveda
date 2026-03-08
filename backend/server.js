@@ -1,6 +1,10 @@
+import dotenv from 'dotenv'
+
+// Load environment variables FIRST, before any other imports
+dotenv.config()
+
 import express from 'express'
 import cors from 'cors'
-import dotenv from 'dotenv'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { connectDB } from './config/db.js'
@@ -8,8 +12,6 @@ import websiteRoutes from './routes/websites.js'
 import paymentRoutes from './routes/payments.js'
 import authRoutes from './routes/auth.js'
 import uploadRoutes from './routes/uploads.js'
-
-dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -28,7 +30,7 @@ connectDB()
 
 // Routes
 app.use('/api/websites', websiteRoutes)
-app.use('/api/payments', paymentRoutes)
+app.use('/api/payment', paymentRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/uploads', uploadRoutes)
 

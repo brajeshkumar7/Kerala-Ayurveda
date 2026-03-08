@@ -6,11 +6,16 @@ import crypto from 'crypto'
  * Handles all payment-related operations
  */
 
-// Initialize Razorpay with keys from environment
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET
-})
+// Get Razorpay instance (lazy initialization)
+const getRazorpay = () => {
+  if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+    throw new Error('Razorpay keys are not configured. Please set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in .env')
+  }
+  return new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
+  })
+}
 
 /**
  * POST /api/payment/create-order
@@ -57,7 +62,7 @@ export const createOrder = async (req, res) => {
     }
 
     // Create order via Razorpay API
-    const order = await razorpay.orders.create(options)
+    const order = await getRazorpay().orders.create(options)
 
     return res.json({
       success: true,
@@ -162,7 +167,7 @@ export const capturePayment = async (req, res) => {
     }
 
     // Capture the payment
-    const payment = await razorpay.payments.capture(razorpay_payment_id, amount)
+    const payment = await getRazorpay().payments.capture(razorpay_payment_id, amount)
 
     return res.json({
       success: true,
@@ -200,7 +205,7 @@ export const getOrderDetails = async (req, res) => {
     }
 
     // Fetch order from Razorpay
-    const order = await razorpay.orders.fetch(orderId)
+    const order = await getRazorpay().orders.fetch(orderId)
 
     return res.json({
       success: true,
@@ -244,7 +249,7 @@ export const getPaymentDetails = async (req, res) => {
     }
 
     // Fetch payment from Razorpay
-    const payment = await razorpay.payments.fetch(paymentId)
+    const payment = await getRazorpay().payments.fetch(paymentId)
 
     return res.json({
       success: true,
@@ -290,7 +295,7 @@ export const refundPayment = async (req, res) => {
     }
 
     // Create refund
-    const refund = await razorpay.payments.refund(razorpay_payment_id, {
+    const refund = await getRazorpay().payments.refund(razorpay_payment_id, {
       amount: amount || undefined // undefined = full refund
     })
 
@@ -332,7 +337,7 @@ export const getPayment = async (req, res) => {
       })
     }
 
-    const payment = await razorpay.payments.fetch(paymentId)
+    const payment = await getRazorpay().payments.fetch(paymentId)
 
     return res.json({
       success: true,
@@ -359,7 +364,7 @@ export const getPayments = async (req, res) => {
   try {
     // TODO: Add admin authentication check
     
-    const payments = await razorpay.payments.all({
+    const payments = await getRazorpay().payments.all({
       count: 50 // Fetch last 50 payments
     })
 

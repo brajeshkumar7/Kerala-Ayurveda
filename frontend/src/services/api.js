@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -57,9 +57,9 @@ export const websiteApi = {
 
 // Payment API endpoints
 export const paymentApi = {
-  processPayment: (data) => api.post('/payments', data),
-  getPaymentStatus: (id) => api.get(`/payments/${id}`),
-  verifyPayment: (id, data) => api.post(`/payments/${id}/verify`, data)
+  processPayment: (data) => api.post('/payment', data),
+  getPaymentStatus: (id) => api.get(`/payment/${id}`),
+  verifyPayment: (id, data) => api.post(`/payment/${id}/verify`, data)
 }
 
 // User API endpoints

@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage'
 import CreateWebsitePage from './pages/CreateWebsitePage'
 import PaymentPage from './pages/PaymentPage'
 import SuccessPage from './pages/SuccessPage'
+import DashboardPage from './pages/DashboardPage'
 import './App.css'
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/create" element={<CreateWebsitePage />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/success" element={<SuccessPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </Router>
   )

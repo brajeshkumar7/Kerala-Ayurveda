@@ -628,7 +628,12 @@ export default function CreateWebsitePage() {
                 )}
 
                 <RazorpayPayment
-                  clinicData={formData.contact}
+                  clinicData={{
+                    clinicName: formData.clinicName,
+                    email: formData.contact.email,
+                    phone: formData.contact.phone,
+                    domainName: formData.domainName
+                  }}
                   amount={9999} // ₹99.99 in paisa
                   onPaymentSuccess={handlePaymentSuccess}
                   onPaymentError={handlePaymentError}

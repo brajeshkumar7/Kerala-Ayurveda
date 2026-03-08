@@ -99,6 +99,12 @@ export default function LandingPage() {
             <a href="#pricing">Pricing</a>
             <a href="#contact">Contact</a>
             <button 
+              className="nav-dashboard"
+              onClick={() => navigate('/dashboard')}
+            >
+              Dashboard
+            </button>
+            <button 
               className="nav-cta"
               onClick={() => navigate('/create')}
             >
