@@ -1,0 +1,142 @@
+.success-page {
+  min-height: 100vh;
+  padding: 40px 20px;
+  background-color: var(--light-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-card {
+  max-width: 600px;
+  background: white;
+  padding: 50px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background-color: var(--success-color);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  font-weight: bold;
+  margin: 0 auto 30px;
+}
+
+.success-card h1 {
+  color: var(--primary-color);
+  margin-bottom: 20px;
+  font-size: 28px;
+}
+
+.success-message {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.details {
+  background-color: var(--light-bg);
+  padding: 20px;
+  border-radius: var(--border-radius);
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-item .label {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.detail-item .value {
+  color: #333;
+  word-break: break-all;
+}
+
+.next-steps {
+  text-align: left;
+  margin-bottom: 30px;
+  background-color: #f0f8f5;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--success-color);
+}
+
+.next-steps h2 {
+  color: var(--success-color);
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.next-steps ol {
+  margin-left: 20px;
+  line-height: 1.8;
+  color: #555;
+}
+
+.next-steps li {
+  margin-bottom: 10px;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 12px 20px;
+  border-radius: var(--border-radius);
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #6d3410;
+}
+
+.btn-secondary {
+  background-color: #ddd;
+  color: var(--primary-color);
+}
+
+.btn-secondary:hover {
+  background-color: #ccc;
+}
+
+@media (max-width: 600px) {
+  .success-card {
+    padding: 30px;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+}
