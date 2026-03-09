@@ -97,7 +97,7 @@ const doctorSiteSchema = new mongoose.Schema(
     // Website Settings
     template: {
       type: String,
-      enum: ['classic', 'modern', 'minimal', 'elegant'],
+      enum: ['classic', 'modern', 'minimal', 'elegant', 'wellness', 'heritage', 'zen'],
       default: 'classic'
     },
 

@@ -427,6 +427,9 @@ export default function CreateWebsitePage() {
                     <option value="modern">Modern</option>
                     <option value="minimal">Minimal</option>
                     <option value="elegant">Elegant</option>
+                    <option value="wellness">Wellness</option>
+                    <option value="heritage">Heritage</option>
+                    <option value="zen">Zen</option>
                   </select>
                 </div>
               </div>

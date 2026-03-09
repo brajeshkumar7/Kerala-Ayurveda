@@ -41,7 +41,8 @@ const normalizeClinicData = (data) => ({
   email: data.email,
   address: data.address,
   city: data.city,
-  googleMapsLink: data.googleMapsLink
+  googleMapsLink: data.googleMapsLink,
+  template: data.template || 'classic'
 })
 
 export default function ClinicWebsitePage() {
@@ -126,11 +127,16 @@ export default function ClinicWebsitePage() {
   }
 
   return (
-    <div className="clinic-website">
+    <div className={`clinic-website template-${clinicData.template || 'classic'}`}>
       <header className="clinic-header">
         <div className="clinic-header-content">
           <h1>{clinicData.clinicName}</h1>
           <p className="clinic-tagline">Professional Ayurvedic Healthcare</p>
+          {clinicData.template && (
+            <span className="template-chip">
+              Template: {clinicData.template}
+            </span>
+          )}
         </div>
       </header>
 

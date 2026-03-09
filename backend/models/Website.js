@@ -19,7 +19,7 @@ const websiteSchema = new mongoose.Schema(
     },
     template: {
       type: String,
-      enum: ['classic', 'modern', 'minimal', 'elegant'],
+      enum: ['classic', 'modern', 'minimal', 'elegant', 'wellness', 'heritage', 'zen'],
       default: 'classic'
     },
     services: [{
