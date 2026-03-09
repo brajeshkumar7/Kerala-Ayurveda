@@ -1,5 +1,19 @@
 import DoctorSite from '../models/DoctorSite.js'
 
+const getProfilePhotoValue = (file) => {
+  if (!file) return null
+
+  if (file.buffer && file.mimetype) {
+    return `data:${file.mimetype};base64,${file.buffer.toString('base64')}`
+  }
+
+  if (file.filename) {
+    return `/uploads/${file.filename}`
+  }
+
+  return null
+}
+
 /**
  * Create a new clinic website
  * POST /api/websites
@@ -56,7 +70,7 @@ export const createWebsite = async (req, res) => {
       bio: bio || '',
       domainName: domainName.toLowerCase(),
       template,
-      profilePhoto: req.file ? `/uploads/${req.file.filename}` : null,
+      profilePhoto: getProfilePhotoValue(req.file),
       isPublished: true, // Auto-publish when created
       status: 'published'
     })
@@ -228,6 +242,10 @@ export const updateWebsite = async (req, res) => {
     delete updates._id
     delete updates.fullDomain
     delete updates.createdAt
+
+    if (req.file) {
+      updates.profilePhoto = getProfilePhotoValue(req.file)
+    }
 
     const website = await DoctorSite.findByIdAndUpdate(id, updates, {
       new: true,

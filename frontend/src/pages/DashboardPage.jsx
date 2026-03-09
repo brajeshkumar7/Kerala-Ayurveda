@@ -28,7 +28,15 @@ export default function DashboardPage() {
   const [error, setError] = useState(null)
   const navigate = useNavigate()
 
-  const API_BASE_URL = import.meta.env.VITE_API_URL.replace('/api', '')
+  const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/api$/, '')
+
+  const getProfilePhotoUrl = (photo) => {
+    if (!photo) return null
+    if (photo.startsWith('data:') || photo.startsWith('http://') || photo.startsWith('https://')) {
+      return photo
+    }
+    return `${API_BASE_URL}${photo.startsWith('/') ? photo : `/${photo}`}`
+  }
 
   useEffect(() => {
     fetchWebsites()
@@ -116,7 +124,7 @@ export default function DashboardPage() {
             <div key={website._id} className="website-card">
               {website.profilePhoto && (
                 <div className="website-photo">
-                  <img src={`${API_BASE_URL}${website.profilePhoto}`} alt={website.clinicName} />
+                  <img src={getProfilePhotoUrl(website.profilePhoto)} alt={website.clinicName} />
                 </div>
               )}
 
