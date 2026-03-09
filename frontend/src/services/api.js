@@ -1,13 +1,31 @@
 import axios from 'axios'
 
-// API base URL derived from environment variable or defaults
-// VITE_API_URL should point to backend host (without trailing slash)
-// Example: "https://api.example.com" or "http://localhost:5000" during development
-const API_BASE_URL = import.meta.env.VITE_API_URL
-  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
-  : import.meta.env.MODE === "development"
-    ? "http://localhost:5000/api"
-    : "/api"
+const normalizeBackendBase = (rawUrl) => {
+  if (!rawUrl) return ''
+
+  let base = rawUrl.trim().replace(/\/+$/, '').replace(/\/api$/, '')
+
+  // Avoid mixed-content blocking on deployed HTTPS frontend.
+  if (
+    typeof window !== 'undefined' &&
+    window.location.protocol === 'https:' &&
+    base.startsWith('http://') &&
+    !base.includes('localhost') &&
+    !base.includes('127.0.0.1')
+  ) {
+    base = base.replace('http://', 'https://')
+  }
+
+  return base
+}
+
+const BACKEND_BASE_URL = import.meta.env.VITE_API_URL
+  ? normalizeBackendBase(import.meta.env.VITE_API_URL)
+  : import.meta.env.MODE === 'development'
+    ? 'http://localhost:5000'
+    : ''
+
+const API_BASE_URL = BACKEND_BASE_URL ? `${BACKEND_BASE_URL}/api` : '/api'
 
 const api = axios.create({
   baseURL: API_BASE_URL,

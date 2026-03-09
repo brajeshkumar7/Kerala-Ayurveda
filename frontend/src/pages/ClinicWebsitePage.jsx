@@ -2,13 +2,31 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import '../styles/ClinicWebsitePage.css'
 
-// derive API base with environment variable
-const API_BASE_URL = import.meta.env.VITE_API_URL
-  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
-  : import.meta.env.MODE === "development"
-    ? "http://localhost:5000/api"
-    : "/api"
-const BACKEND_BASE_URL = API_BASE_URL.replace('/api', '')
+const normalizeBackendBase = (rawUrl) => {
+  if (!rawUrl) return ''
+
+  let base = rawUrl.trim().replace(/\/+$/, '').replace(/\/api$/, '')
+
+  if (
+    typeof window !== 'undefined' &&
+    window.location.protocol === 'https:' &&
+    base.startsWith('http://') &&
+    !base.includes('localhost') &&
+    !base.includes('127.0.0.1')
+  ) {
+    base = base.replace('http://', 'https://')
+  }
+
+  return base
+}
+
+const BACKEND_BASE_URL = import.meta.env.VITE_API_URL
+  ? normalizeBackendBase(import.meta.env.VITE_API_URL)
+  : import.meta.env.MODE === 'development'
+    ? 'http://localhost:5000'
+    : ''
+
+const API_BASE_URL = BACKEND_BASE_URL ? `${BACKEND_BASE_URL}/api` : '/api'
 
 const normalizeClinicData = (data) => ({
   clinicName: data.clinicName,
@@ -31,6 +49,7 @@ export default function ClinicWebsitePage() {
   const [clinicData, setClinicData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [resolvedAssetOrigin, setResolvedAssetOrigin] = useState(BACKEND_BASE_URL)
 
   useEffect(() => {
     fetchClinicData()
@@ -42,15 +61,21 @@ export default function ClinicWebsitePage() {
       setError(null)
 
       const domain = searchParams.get('domain')
-      let response
+      const endpoint = domain
+        ? `${API_BASE_URL}/websites/domain/${encodeURIComponent(domain)}`
+        : `${BACKEND_BASE_URL}/api/site-data`
 
-      if (domain) {
-        response = await fetch(`${API_BASE_URL}/websites/domain/${encodeURIComponent(domain)}`)
-      } else {
-        response = await fetch(`${BACKEND_BASE_URL}/api/site-data`)
-      }
-
+      const response = await fetch(endpoint)
       const result = await response.json()
+
+      try {
+        const responseOrigin = new URL(response.url).origin
+        if (responseOrigin) {
+          setResolvedAssetOrigin(responseOrigin)
+        }
+      } catch (_) {
+        // Keep default BACKEND_BASE_URL if URL parsing fails.
+      }
 
       if (result.success && result.data) {
         setClinicData(normalizeClinicData(result.data))
@@ -77,7 +102,7 @@ export default function ClinicWebsitePage() {
   if (error) {
     return (
       <div className="clinic-website-error">
-        <h2>?? {error}</h2>
+        <h2>{error}</h2>
         <p>The clinic website you're looking for could not be found.</p>
       </div>
     )
@@ -94,8 +119,10 @@ export default function ClinicWebsitePage() {
 
   const getImageUrl = (path) => {
     if (!path) return null
-    if (path.startsWith('http')) return path
-    return `${BACKEND_BASE_URL}${path}`
+    if (path.startsWith('http://') || path.startsWith('https://')) return path
+
+    const assetBase = resolvedAssetOrigin || BACKEND_BASE_URL || window.location.origin
+    return `${assetBase}${path.startsWith('/') ? path : `/${path}`}`
   }
 
   return (
@@ -144,7 +171,7 @@ export default function ClinicWebsitePage() {
             ) : Array.isArray(clinicData.services) ? (
               <ul>
                 {clinicData.services.map((service, index) => (
-                  <li key={index}>? {service}</li>
+                  <li key={index}>{service}</li>
                 ))}
               </ul>
             ) : null}
@@ -157,7 +184,7 @@ export default function ClinicWebsitePage() {
           <h2>Get in Touch</h2>
           <div className="contact-grid">
             <div className="contact-item">
-              <h3>?? Phone</h3>
+              <h3>Phone</h3>
               <a href={`tel:${clinicData.phone}`} className="contact-link">
                 {clinicData.phone}
               </a>
@@ -165,7 +192,7 @@ export default function ClinicWebsitePage() {
 
             {clinicData.whatsapp && (
               <div className="contact-item">
-                <h3>?? WhatsApp</h3>
+                <h3>WhatsApp</h3>
                 <a
                   href={`https://wa.me/${clinicData.whatsapp.replace(/\D/g, '')}`}
                   target="_blank"
@@ -178,14 +205,14 @@ export default function ClinicWebsitePage() {
             )}
 
             <div className="contact-item">
-              <h3>?? Email</h3>
+              <h3>Email</h3>
               <a href={`mailto:${clinicData.email}`} className="contact-link">
                 {clinicData.email}
               </a>
             </div>
 
             <div className="contact-item">
-              <h3>?? Address</h3>
+              <h3>Address</h3>
               <p className="address-text">
                 {clinicData.address}<br />
                 {clinicData.city}
@@ -205,7 +232,7 @@ export default function ClinicWebsitePage() {
               rel="noopener noreferrer"
               className="map-link"
             >
-              ?? View on Google Maps
+              View on Google Maps
             </a>
           </div>
         </section>
