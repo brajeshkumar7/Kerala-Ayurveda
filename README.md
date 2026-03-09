@@ -1,57 +1,179 @@
-# AyurWebsites - Full Stack SaaS Project
+# AyurWebsites
 
-A complete full-stack SaaS platform for creating Ayurvedic business websites. Built with React + Vite frontend and Node.js + Express backend with MongoDB.
+AyurWebsites is a full-stack platform to create, publish, and manage Ayurvedic doctor/clinic websites with payment integration, template-based rendering, and custom-domain-ready routing.
 
-## Project Structure
+## What This Project Does
 
-### Frontend (`/frontend`)
-- **React 18** with **Vite** for fast development
-- **React Router** for navigation
-- **Zustand** for state management
-- **Axios** for API requests
+- Lets a clinic owner create a website via a multi-step form.
+- Supports doctor profile photo upload during creation.
+- Integrates Razorpay order + payment verification flow.
+- Publishes and manages websites from a dashboard.
+- Renders doctor websites from DB data using multiple templates.
+- Resolves clinic sites by domain/subdomain (including wildcard subdomain deployments).
 
-**Pages:**
-- LandingPage - Homepage with features showcase
-- CreateWebsitePage - Website creation form
-- PaymentPage - Payment processing
-- SuccessPage - Order confirmation
+## Current Feature Set (Latest)
 
-**Folders:**
-- `src/pages/` - Page components
-- `src/components/` - Reusable components
-- `src/store/` - Zustand store for state management
-- `src/services/` - API service configuration
-- `src/hooks/` - Custom React hooks
-- `src/styles/` - CSS stylesheets
+### Core Product
+- Multi-step website creation form (`/create`)
+- Payment flow (`/payment` -> `/success`)
+- Dashboard listing all created websites (`/dashboard`)
+- Visit website action for each clinic
+- Publish / unpublish endpoints
 
-### Backend (`/backend`)
-- **Node.js** with **Express.js** framework
-- **MongoDB** with **Mongoose** ODM
-- RESTful API architecture
+### Doctor Website Templates
+Available template IDs:
+- `classic`
+- `modern`
+- `minimal`
+- `elegant`
+- `wellness`
+- `heritage`
+- `zen`
 
-**Folders:**
-- `controllers/` - Request handlers
-- `routes/` - API endpoint definitions
-- `models/` - MongoDB schema definitions
-- `services/` - Business logic
-- `middlewares/` - Custom middleware functions
-- `config/` - Database and environment configuration
-- `templates/` - Email and document templates
-- `uploads/` - File storage for user uploads
+The selected template is saved in MongoDB and applied in clinic rendering.
 
-**Models:**
-- User - User accounts and subscriptions
-- Website - Website data and configurations
-- Payment - Payment transactions and invoices
+### Landing Page (Current)
+- Hero section
+- CTA section
+- Footer
 
-## Getting Started
+Note: The older "Why Choose" and pricing sections were removed.
 
-### Prerequisites
-- Node.js (v14 or higher)
-- MongoDB (local or Atlas)
-- npm or yarn
+### Domain and Routing
+- API lookup by domain: `/api/websites/domain/:domainName`
+- Domain resolver middleware maps hostname/subdomain to clinic data
+- Root route (`/`) on backend:
+  - Redirects to frontend clinic route when a clinic domain is resolved
+  - Returns landing JSON when no clinic mapping is found
 
-### Frontend Setup
+### Image Handling (Latest)
+- Website create/update uses `multer.memoryStorage()`
+- Profile photo is stored as data URL when uploaded via memory buffer
+- This avoids many missing-image issues on serverless/stateless hosting
+
+## Tech Stack
+
+### Frontend
+- React 18
+- Vite
+- React Router v6
+- Zustand
+- Axios
+- CSS
+
+### Backend
+- Node.js
+- Express
+- MongoDB + Mongoose
+- Multer
+- Razorpay SDK
+- CORS + dotenv
+
+## Repository Structure
+
+```text
+frontend/
+  src/
+    pages/
+    components/
+    services/
+    store/
+    styles/
+  vercel.json
+
+backend/
+  config/
+  controllers/
+  middlewares/
+  models/
+  routes/
+  services/
+  uploads/
+  server.js
+```
+
+## Routes (Frontend)
+
+- `/` -> HomePage
+- `/landing` -> LandingPage
+- `/create` -> CreateWebsitePage
+- `/payment` -> PaymentPage
+- `/success` -> SuccessPage
+- `/dashboard` -> DashboardPage
+- `/clinic` -> ClinicWebsitePage (`?domain=yourDomain`)
+
+## API Endpoints (Backend)
+
+Base path: `/api`
+
+### Websites
+- `POST /websites` (multipart form, supports `profilePhoto`)
+- `GET /websites`
+- `GET /websites/:id`
+- `GET /websites/domain/:domainName`
+- `PUT /websites/:id` (multipart supported)
+- `DELETE /websites/:id`
+- `POST /websites/:id/publish`
+- `POST /websites/:id/unpublish`
+
+### Payments (Razorpay)
+- `POST /payment/create-order`
+- `POST /payment/verify`
+- `POST /payment/capture`
+- `POST /payment/refund`
+- `GET /payment/order/:orderId`
+- `GET /payment/payment/:paymentId`
+- `GET /payment/:paymentId`
+- `GET /payment`
+
+### Auth
+- `/auth/*` routes available (register/login/profile pattern)
+
+### Uploads
+- `POST /uploads/image`
+- `POST /uploads/document`
+
+### Health
+- `GET /api/health`
+
+## Environment Variables
+
+## Backend (`backend/.env`)
+
+```env
+PORT=5000
+NODE_ENV=development
+MONGODB_URI=mongodb://localhost:27017/ayurwebsites
+JWT_SECRET=replace_this
+
+# IMPORTANT: used by clinicWebsite redirect logic
+FRONTEND_URL=http://localhost:5173
+
+RAZORPAY_KEY_ID=your_key
+RAZORPAY_KEY_SECRET=your_secret
+```
+
+## Frontend (`frontend/.env` or `.env.local`)
+
+```env
+VITE_API_URL=http://localhost:5000
+
+# Enable custom subdomain behavior in frontend links/resolution
+VITE_ENABLE_CUSTOM_SUBDOMAINS=false
+VITE_CLINIC_BASE_DOMAIN=ayurvedaclinicwebsite.com
+```
+
+## Local Development
+
+## 1) Start backend
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+## 2) Start frontend
 
 ```bash
 cd frontend
@@ -59,203 +181,95 @@ npm install
 npm run dev
 ```
 
-Frontend will run on `http://localhost:5173`
+Frontend: `http://localhost:5173`  
+Backend: `http://localhost:5000`
 
-### Backend Setup
+## Build Commands
 
-```bash
-cd backend
-npm install
+### Frontend
+- `npm run dev`
+- `npm run build`
+- `npm run preview`
+- `npm run lint`
+
+### Backend
+- `npm run dev`
+- `npm start`
+
+## Deployment Guide (Vercel + External DNS such as Cloudflare)
+
+## 1) Add domains in Vercel project
+Add all of these in **Project -> Settings -> Domains**:
+- `ayurvedaclinicwebsite.com`
+- `www.ayurvedaclinicwebsite.com`
+- `*.ayurvedaclinicwebsite.com`
+
+## 2) Configure DNS at your DNS provider
+Use values shown by Vercel for your project. Typical records:
+- `A` record: `@` -> `216.198.79.1` (or Vercel-provided A value)
+- `CNAME` record: `www` -> Vercel-provided target (for example `...vercel-dns-017.com`)
+- `CNAME` record: `*` -> `cname.vercel-dns.com`
+
+For Cloudflare, keep these records as **DNS only** (not proxied) while verifying.
+
+## 3) Do NOT mix DNS authority modes
+Choose one:
+- External DNS (Cloudflare/GoDaddy/etc) with DNS records matching Vercel requirements, OR
+- Full Vercel DNS (change registrar nameservers to `ns1.vercel-dns.com`, `ns2.vercel-dns.com`)
+
+Do not configure both simultaneously.
+
+## 4) Frontend env vars in Vercel
+
+```env
+VITE_API_URL=https://your-backend-domain
+VITE_ENABLE_CUSTOM_SUBDOMAINS=true
+VITE_CLINIC_BASE_DOMAIN=ayurvedaclinicwebsite.com
 ```
 
-Create a `.env` file in the backend directory:
-```
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/ayurwebsites
-JWT_SECRET=your_secret_key_here
-NODE_ENV=development
-FRONTEND_URL=http://localhost:5173
-```
+Redeploy after changing env vars.
 
-Start the development server:
-```bash
-npm run dev
-```
+## 5) Backend production settings
+- Set `FRONTEND_URL` to deployed frontend URL
+- Ensure CORS allows your frontend origin(s)
+- Ensure backend is HTTPS and publicly reachable
 
-Backend API will run on `http://localhost:5000`
+## Troubleshooting
 
-## API Endpoints
+### Vercel shows "Invalid Configuration"
+- DNS records do not yet match Vercel expected values, or
+- DNS propagation is still in progress, or
+- You added Vercel nameserver records as DNS entries instead of changing nameservers at registrar
 
-### ✅ Websites (FULLY IMPLEMENTED)
-- `POST /api/websites` - Create website ✅
-- `GET /api/websites` - Get all websites with pagination & filters ✅
-- `GET /api/websites/:id` - Get specific website ✅
-- `GET /api/websites/domain/:domainName` - Get website by domain ✅
-- `PUT /api/websites/:id` - Update website ✅
-- `DELETE /api/websites/:id` - Delete website ✅
-- `POST /api/websites/:id/publish` - Publish website ✅
-- `POST /api/websites/:id/unpublish` - Unpublish website ✅
+### Custom subdomain opens NXDOMAIN
+- Wildcard `CNAME *` is missing or wrong
+- DNS not propagated yet
+- Domain not added in Vercel with wildcard entry
 
-**Features:**
-- File upload for profile photos
-- Automatic domain generation
-- Duplicate domain detection
-- Pagination support
-- Filter by city, template, status
-- Comprehensive validation and error handling
+### Doctor images sometimes missing
+- Older records may still reference stale `/uploads/...` paths from previous deployments
+- Re-upload image for those records so profile photo stores as current data URL format
 
-**See:** [API_DOCUMENTATION.md](backend/API_DOCUMENTATION.md) for detailed endpoints
+### Visit Website opens JSON instead of clinic page
+- Usually happens when hitting backend domain directly without correct frontend redirect context
+- Confirm backend `FRONTEND_URL` is correct
+- Confirm frontend `/clinic?domain=...` route is deployed and working
 
-### Payments (In Progress)
-- `POST /api/payments` - Process payment
-- `GET /api/payments/:id` - Get payment status
-- `POST /api/payments/:id/verify` - Verify payment
+## Demo Checklist (HR Presentation)
 
-### Auth (In Progress)
-- `POST /api/auth/register` - Register user
-- `POST /api/auth/login` - Login user
-- `POST /api/auth/logout` - Logout user
-- `GET /api/auth/profile` - Get user profile
-- `PUT /api/auth/profile` - Update user profile
+1. Open `/landing`
+2. Go to `/create`
+3. Fill clinic details + upload doctor image
+4. Pick different templates (including `wellness`, `heritage`, `zen`)
+5. Complete payment
+6. Open `/dashboard`
+7. Click **Visit Website** and show domain-based rendering
 
-### Uploads (In Progress)
-- `POST /api/uploads/image` - Upload image
-- `POST /api/uploads/document` - Upload document
+## Notes for Maintainers
 
-## Features
-
-- ✅ Complete project structure (frontend + backend separated)
-- ✅ Professional landing page with 6 features + 3-tier pricing
-- ✅ Multi-tab clinic website creation form with validation
-- ✅ Frontend-backend integration with Axios + FormData
-- ✅ MongoDB integration with DoctorSite schema
-- ✅ **Complete Website API** (8 endpoints fully implemented)
-  - ✅ File upload handling (profile photos)
-  - ✅ Unique domain checking
-  - ✅ Pagination and filtering
-  - ✅ Publish/unpublish functionality
-  - ✅ Comprehensive validation and error handling
-- ✅ State management with Zustand
-- ✅ RESTful API structure
-- ✅ Environment configuration
-- ✅ Comprehensive API documentation (3 docs)
-- ✅ Automated test suite
-- ⏳ Payment processing gateway (routes/controllers stubbed)
-- ⏳ User authentication (JWT framework ready)
-- ⏳ Email service (SMTP configuration needed)
-
-## Next Steps
-
-### Immediate (Testing)
-1. **Setup MongoDB** 
-   - Local: Start MongoDB with `mongod`
-   - Cloud: Use MongoDB Atlas connection string
-
-2. **Install Dependencies**
-   ```bash
-   cd backend && npm install
-   cd ../frontend && npm install
-   ```
-
-3. **Test the API**
-   ```bash
-   cd backend
-   npm run dev        # Terminal 1
-   node test-api.js   # Terminal 2
-   ```
-
-4. **Frontend Integration Testing**
-   ```bash
-   cd frontend
-   npm run dev
-   # Test form submission and file upload
-   ```
-
-### High Priority
-1. **Complete Payment Integration**
-   - Implement Stripe API integration
-   - Complete `paymentController.js` functions
-   - Add payment endpoints
-
-2. **User Authentication**
-   - Complete `authController.js` (register, login, getProfile)
-   - Implement JWT middleware
-   - Protect website endpoints with auth
-
-3. **Email Service**
-   - Configure SMTP settings
-   - Implement welcome emails
-   - Send order confirmations
-
-### Documentation
-- ✅ API_DOCUMENTATION.md - Complete API reference
-- ✅ BACKEND_SETUP.md - Setup and deployment guide
-- ✅ API_QUICK_REFERENCE.md - Developer quick reference
-- ✅ IMPLEMENTATION_SUMMARY.md - What's implemented
-
-See `backend/` directory for these files.
-
-## Environment Variables
-
-### Backend (.env)
-```
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/ayurwebsites
-JWT_SECRET=your_jwt_secret_key_here
-NODE_ENV=development
-FRONTEND_URL=http://localhost:5173
-STRIPE_SECRET_KEY=your_stripe_key
-STRIPE_PUBLISHABLE_KEY=your_publishable_key
-```
-
-### Frontend (.env.local - optional)
-```
-REACT_APP_API_URL=http://localhost:5000/api
-```
- 
-## Architecture
-
-### Frontend Architecture
-- Component-based structure
-- Centralized state management with Zustand
-- API layer abstraction with Axios
-- React Router for client-side routing
-
-### Backend Architecture
-- MVC pattern (Models, Views/Routes, Controllers)
-- Separated services layer for business logic
-- Middleware-based request handling
-- MongoDB for data persistence
-
-## Technologies Used
-
-**Frontend:**
-- React 18
-- Vite
-- React Router v6
-- Zustand
-- Axios
-- CSS3
-
-**Backend:**
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
-- JWT
-- Multer (file uploads)
-
-## Development Tips
-
-1. The frontend proxy is configured in `vite.config.js` to forward `/api` requests to the backend
-2. All API calls should use relative paths starting with `/api`
-3. MongoDB documents are automatically timestamped with `createdAt` and `updatedAt`
-4. Use `.env.example` as a template for local environment setup
+- Backend currently has CORS origin hardcoded in `backend/server.js` to `https://kerala-ayurveda.vercel.app`. If you move domains/environments, update this to env-driven configuration.
+- `frontend/vercel.json` rewrites all routes to `/` for SPA routing.
 
 ## License
 
 ISC
-
----
-
-**Ready to build?** Start by implementing the controller functions and connecting to your MongoDB instance!
