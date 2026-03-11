@@ -68,14 +68,14 @@ export default function LandingPage() {
             <div className="hero-image-placeholder">
               <div className="mockup clinic-preview">
                 <div className="mockup-header clinic-preview-header">
-                  <div className="preview-brand">Gupta Clinic</div>
+                  <div className="preview-brand">Smith Clinic</div>
                   <span className="preview-status">Live</span>
                 </div>
                 <div className="mockup-content clinic-preview-content">
                   <div className="preview-hero">
                     <div className="preview-avatar"></div>
                     <div className="preview-intro">
-                      <h4>Dr. Arnav Gupta</h4>
+                      <h4>Dr. David Smith</h4>
                       <p>Ayurvedic Specialist</p>
                     </div>
                   </div>
